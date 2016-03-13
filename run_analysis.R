@@ -1,4 +1,4 @@
-##starting from the point where we have downloaded and unzipped the dataset
+library(tidyr)##starting from the point where we have downloaded and unzipped the dataset
 
 ##examine the folders and subfolders
 root <- "UCI HAR Dataset"
@@ -6,11 +6,20 @@ root <- "UCI HAR Dataset"
 files <- list.files(root, recursive=TRUE)
 
 ##read the features table
-features <- read.table("UCI HAR Dataset/UCI HAR Dataset/features.txt")
-    
-##let's find out a little more about the dataset dimensions
-tables <- lapply(files[5:28], function(file) {
-    table <- read.table(paste(root, file, sep="/"))
-    print(file)
-    print(dim(table))
-})
+features <- read.table("UCI HAR Dataset/features.txt")
+
+##read the test data
+testdata <- read.table("UCI HAR Dataset/test/X_test.txt")
+
+##apply the feature names to the data
+names(testdata) <- features[,2]
+testdata$dataset = "test"
+
+##read the training data
+traindata <- read.table("UCI HAR Dataset/train/X_train.txt")
+names(traindata) <- features[,2]
+traindata$dataset = "train"
+
+merged <- rbind(testdata, traindata)
+
+print(head(merged))
